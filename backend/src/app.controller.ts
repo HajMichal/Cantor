@@ -1,12 +1,24 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { AppService } from './app.service';
+import {
+  CreateTransactionDto,
+  ExchangeRateDto,
+  TransactionResponseDto,
+} from './dto';
 
-@Controller()
+@Controller('cantor')
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @Get('rate/eur-to-pln')
+  getEurToPlnRate(): Promise<ExchangeRateDto> {
+    return this.appService.getEurToPlnRate();
+  }
+
+  @Post('transaction')
+  createTransaction(
+    @Body() { amountEur }: CreateTransactionDto,
+  ): Promise<TransactionResponseDto> {
+    return this.appService.createTransaction(amountEur);
   }
 }
